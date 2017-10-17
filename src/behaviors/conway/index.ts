@@ -1,9 +1,12 @@
 enum STATE {
   DEAD = 0,
-  ALIVE = 1
+  ALIVE = 1,
+  CLICKA = 2,
+  CLICKD = 3
 }
 
 export default class Conway {
+  private pendingIndex: number;
   public environment: STATE[];
   public width: number;
   public height: number;
@@ -12,6 +15,7 @@ export default class Conway {
     this.environment = this.initEnvironment(width*height, rate);
     this.width = width;
     this.height = height;
+    this.pendingIndex = -1;
   }
 
   public tick(): STATE[] {
@@ -25,16 +29,26 @@ export default class Conway {
         return `rgb(0, 0, 0)`;
       case STATE.DEAD:
         return `rgb(255, 255, 255)`;
+      case STATE.CLICKA:
+      case STATE.CLICKD:
+        return `rgb(255,0,0)`;
     }
   }
 
   private cellUpdate(state: STATE, index: number): STATE {
+    if (this.pendingIndex === index) {
+      this.pendingIndex = -1;
+      // return this.environment[index] === STATE.ALIVE ? STATE.CLICKA : STATE.CLICKD;
+      return this.environment[index] === STATE.ALIVE ? STATE.DEAD : STATE.ALIVE;
+    }
     let aliveNeighbors:number = this.sumOfNeighbors(index);
 
     switch(state) {
       case STATE.ALIVE:
+      case STATE.CLICKA:
         return aliveNeighbors === 2 || aliveNeighbors === 3 ? STATE.ALIVE : STATE.DEAD;
       case STATE.DEAD:
+      case STATE.CLICKD:
         return aliveNeighbors === 3 ? STATE.ALIVE : STATE.DEAD;
     }
   }
@@ -51,7 +65,9 @@ export default class Conway {
   }
 
   public makeToggle(index: number) {
-    this.environment[index] = this.environment[index] === STATE.ALIVE ? STATE.DEAD : STATE.ALIVE;
+    this.pendingIndex = index;
+    // this.environment[index] = this.environment[index] === STATE.ALIVE ? STATE.DEAD : STATE.ALIVE;
+
   }
 
   public getX(index: number): number {

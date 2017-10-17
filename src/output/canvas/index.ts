@@ -15,9 +15,9 @@ export default class Canvas {
   constructor(environment, rootNode: HTMLElement, width: number, height: number, tickSpeed: number) {
     this.environment = environment;
     this.width = width;
-    this.cellWidth = Math.floor(this.width/this.environment.width);
+    this.cellWidth = this.width/this.environment.width;
     this.height = height;
-    this.cellHeight = Math.floor(this.width/this.environment.height);
+    this.cellHeight = this.width/this.environment.height;
     this.tickSpeed = tickSpeed;
     d3Selection.select(rootNode).append('canvas')
         .attr('width', this.width)
@@ -29,7 +29,7 @@ export default class Canvas {
   }
 
   public update(): void {
-    this.timer = d3Timer.timer(() => {
+    this.timer = d3Timer.interval(() => {
       this.dataBind();
       this.draw();
     }, this.tickSpeed);
@@ -70,9 +70,11 @@ export default class Canvas {
     this.canvas.on('click', () => {
       let mouseX = Math.floor(d3Selection.event.clientX/(this.width/this.environment.width));
       let mouseY = Math.floor(d3Selection.event.clientY/(this.width/this.environment.height));
-      this.environment.makeToggle(this.environment.getIndex(mouseX, mouseY));
+      this.environment.makeToggle(this.environment.getIndex(mouseX-1, mouseY-1));
       console.log(`${d3Selection.event.clientX}, ${d3Selection.event.clientY}`);
       console.log(`${mouseX}, ${mouseY}`);
+      // this.dataBind();
+      // this.draw();
     });
   }
 }

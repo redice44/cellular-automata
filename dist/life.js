@@ -562,7 +562,7 @@ var conway_1 = __webpack_require__(50);
 function init() {
     var canvasWidth = 600;
     var canvasHeight = 600;
-    var tickSpeed = Math.floor(1000 / 60);
+    var tickSpeed = 100; //Math.floor(1000/60);
     var envWidth = 60;
     var envHeight = 60;
     var spawnRate = 0.3;
@@ -586,9 +586,9 @@ var Canvas = /** @class */ (function () {
     function Canvas(environment, rootNode, width, height, tickSpeed) {
         this.environment = environment;
         this.width = width;
-        this.cellWidth = Math.floor(this.width / this.environment.width);
+        this.cellWidth = this.width / this.environment.width;
         this.height = height;
-        this.cellHeight = Math.floor(this.width / this.environment.height);
+        this.cellHeight = this.width / this.environment.height;
         this.tickSpeed = tickSpeed;
         d3Selection.select(rootNode).append('canvas')
             .attr('width', this.width)
@@ -599,7 +599,7 @@ var Canvas = /** @class */ (function () {
     }
     Canvas.prototype.update = function () {
         var _this = this;
-        this.timer = d3Timer.timer(function () {
+        this.timer = d3Timer.interval(function () {
             _this.dataBind();
             _this.draw();
         }, this.tickSpeed);
@@ -638,9 +638,11 @@ var Canvas = /** @class */ (function () {
         this.canvas.on('click', function () {
             var mouseX = Math.floor(d3Selection.event.clientX / (_this.width / _this.environment.width));
             var mouseY = Math.floor(d3Selection.event.clientY / (_this.width / _this.environment.height));
-            _this.environment.makeToggle(_this.environment.getIndex(mouseX, mouseY));
+            _this.environment.makeToggle(_this.environment.getIndex(mouseX - 1, mouseY - 1));
             console.log(d3Selection.event.clientX + ", " + d3Selection.event.clientY);
             console.log(mouseX + ", " + mouseY);
+            // this.dataBind();
+            // this.draw();
         });
     };
     return Canvas;
@@ -1616,12 +1618,15 @@ var STATE;
 (function (STATE) {
     STATE[STATE["DEAD"] = 0] = "DEAD";
     STATE[STATE["ALIVE"] = 1] = "ALIVE";
+    STATE[STATE["CLICKA"] = 2] = "CLICKA";
+    STATE[STATE["CLICKD"] = 3] = "CLICKD";
 })(STATE || (STATE = {}));
 var Conway = /** @class */ (function () {
     function Conway(width, height, rate) {
         this.environment = this.initEnvironment(width * height, rate);
         this.width = width;
         this.height = height;
+        this.pendingIndex = -1;
     }
     Conway.prototype.tick = function () {
         this.environment = this.environment.map(this.cellUpdate.bind(this));
@@ -1633,14 +1638,24 @@ var Conway = /** @class */ (function () {
                 return "rgb(0, 0, 0)";
             case STATE.DEAD:
                 return "rgb(255, 255, 255)";
+            case STATE.CLICKA:
+            case STATE.CLICKD:
+                return "rgb(255,0,0)";
         }
     };
     Conway.prototype.cellUpdate = function (state, index) {
+        if (this.pendingIndex === index) {
+            this.pendingIndex = -1;
+            // return this.environment[index] === STATE.ALIVE ? STATE.CLICKA : STATE.CLICKD;
+            return this.environment[index] === STATE.ALIVE ? STATE.DEAD : STATE.ALIVE;
+        }
         var aliveNeighbors = this.sumOfNeighbors(index);
         switch (state) {
             case STATE.ALIVE:
+            case STATE.CLICKA:
                 return aliveNeighbors === 2 || aliveNeighbors === 3 ? STATE.ALIVE : STATE.DEAD;
             case STATE.DEAD:
+            case STATE.CLICKD:
                 return aliveNeighbors === 3 ? STATE.ALIVE : STATE.DEAD;
         }
     };
@@ -1655,7 +1670,8 @@ var Conway = /** @class */ (function () {
             this.isAlive(this.environment[this.getBottomRightNeighbor(index)]);
     };
     Conway.prototype.makeToggle = function (index) {
-        this.environment[index] = this.environment[index] === STATE.ALIVE ? STATE.DEAD : STATE.ALIVE;
+        this.pendingIndex = index;
+        // this.environment[index] = this.environment[index] === STATE.ALIVE ? STATE.DEAD : STATE.ALIVE;
     };
     Conway.prototype.getX = function (index) {
         return index - Math.floor(index / this.width) * this.width;

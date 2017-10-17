@@ -4,7 +4,7 @@ import Conway from './behaviors/conway';
 function init() {
   const canvasWidth = 600;
   const canvasHeight = 600;
-  const tickSpeed = Math.floor(1000/60);
+  const tickSpeed = 100;//Math.floor(1000/60);
   const envWidth = 60;
   const envHeight = 60;
   const spawnRate = 0.3;
