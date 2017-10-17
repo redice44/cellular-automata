@@ -6,7 +6,7 @@
     "moduleResolution": "node",
     "rootDir": ".",
     "noImplicitReturns": true,
-    "noImplicitThis": true,
+    "noImplicitThis": false,
     "noImplicitAny": false,
     "strictNullChecks": false,
     "noUnusedLocals": false,

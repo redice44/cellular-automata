@@ -17,6 +17,7 @@
     "webpack": "^3.7.1"
   },
   "dependencies": {
-    "d3": "^4.11.0"
+    "d3-selection": "^1.1.0",
+    "d3-timer": "^1.0.7"
   }
 }
