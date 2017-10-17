@@ -638,7 +638,7 @@ var Canvas = /** @class */ (function () {
         this.canvas.on('click', function () {
             var mouseX = Math.floor(d3Selection.event.clientX / (_this.width / _this.environment.width));
             var mouseY = Math.floor(d3Selection.event.clientY / (_this.width / _this.environment.height));
-            _this.environment.makeAlive(_this.environment.getIndex(mouseX, mouseY));
+            _this.environment.makeToggle(_this.environment.getIndex(mouseX, mouseY));
             console.log(d3Selection.event.clientX + ", " + d3Selection.event.clientY);
             console.log(mouseX + ", " + mouseY);
         });
@@ -1654,8 +1654,8 @@ var Conway = /** @class */ (function () {
             this.isAlive(this.environment[this.getBottomNeighbor(index)]) +
             this.isAlive(this.environment[this.getBottomRightNeighbor(index)]);
     };
-    Conway.prototype.makeAlive = function (index) {
-        this.environment[index] = STATE.ALIVE;
+    Conway.prototype.makeToggle = function (index) {
+        this.environment[index] = this.environment[index] === STATE.ALIVE ? STATE.DEAD : STATE.ALIVE;
     };
     Conway.prototype.getX = function (index) {
         return index - Math.floor(index / this.width) * this.width;

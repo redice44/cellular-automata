@@ -50,8 +50,8 @@ export default class Conway {
       this.isAlive(this.environment[this.getBottomRightNeighbor(index)]);
   }
 
-  public makeAlive(index: number) {
-    this.environment[index] = STATE.ALIVE;
+  public makeToggle(index: number) {
+    this.environment[index] = this.environment[index] === STATE.ALIVE ? STATE.DEAD : STATE.ALIVE;
   }
 
   public getX(index: number): number {

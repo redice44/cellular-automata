@@ -70,7 +70,7 @@ export default class Canvas {
     this.canvas.on('click', () => {
       let mouseX = Math.floor(d3Selection.event.clientX/(this.width/this.environment.width));
       let mouseY = Math.floor(d3Selection.event.clientY/(this.width/this.environment.height));
-      this.environment.makeAlive(this.environment.getIndex(mouseX, mouseY));
+      this.environment.makeToggle(this.environment.getIndex(mouseX, mouseY));
       console.log(`${d3Selection.event.clientX}, ${d3Selection.event.clientY}`);
       console.log(`${mouseX}, ${mouseY}`);
     });
