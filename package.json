@@ -1,0 +1,22 @@
+{
+  "name": "cellular-automata",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "webpack --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/d3": "^4.11.0",
+    "ts-loader": "^3.0.2",
+    "typescript": "^2.5.3",
+    "webpack": "^3.7.1"
+  },
+  "dependencies": {
+    "d3": "^4.11.0"
+  }
+}
