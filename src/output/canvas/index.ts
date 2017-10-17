@@ -25,6 +25,7 @@ export default class Canvas {
     this.canvas = d3Selection.select('canvas');
 
     this.dataContainer = d3Selection.select(document.createElement('custom'));
+    this.bindHandlers();
   }
 
   public update(): void {
@@ -62,6 +63,16 @@ export default class Canvas {
       context.rect(+node.attr('x'), +node.attr('y'), +node.attr('width'), +node.attr('height'));
       context.fill();
       context.closePath();
+    });
+  }
+
+  private bindHandlers() {
+    this.canvas.on('click', () => {
+      let mouseX = Math.floor(d3Selection.event.clientX/(this.width/this.environment.width));
+      let mouseY = Math.floor(d3Selection.event.clientY/(this.width/this.environment.height));
+      this.environment.makeAlive(this.environment.getIndex(mouseX, mouseY));
+      console.log(`${d3Selection.event.clientX}, ${d3Selection.event.clientY}`);
+      console.log(`${mouseX}, ${mouseY}`);
     });
   }
 }

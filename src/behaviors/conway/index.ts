@@ -50,8 +50,8 @@ export default class Conway {
       this.isAlive(this.environment[this.getBottomRightNeighbor(index)]);
   }
 
-  private isAlive(state: STATE): number {
-    return state === STATE.ALIVE ? 1 : 0;
+  public makeAlive(index: number) {
+    this.environment[index] = STATE.ALIVE;
   }
 
   public getX(index: number): number {
@@ -60,6 +60,14 @@ export default class Conway {
 
   public getY(index: number): number {
     return Math.floor(index/this.width);
+  }
+
+  public getIndex(x: number, y: number): number {
+    return y * this.width + x;
+  }
+
+  private isAlive(state: STATE): number {
+    return state === STATE.ALIVE ? 1 : 0;
   }
 
   private getTop(i: number): number {
@@ -80,10 +88,6 @@ export default class Conway {
   private getRight(i: number): number {
     let x = this.getX(i);
     return i === this.width-1 ? 0 : x+1;
-  }
-
-  private getIndex(x: number, y: number): number {
-    return y * this.width + x;
   }
 
   private getUpLeftNeighbor(i: number): number {
